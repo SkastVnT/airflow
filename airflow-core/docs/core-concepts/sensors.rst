@@ -35,14 +35,14 @@ Much like Operators, Airflow has a large set of pre-built Sensors you can use, b
 BaseSensorOperator parameters
 -----------------------------
 
-All sensors in Airflow ultimately inherit from ``BaseSensorOperator`` (directly or indirectly).
-This base class defines the common behavior and parameters that control
+All sensors in Airflow ultimately inherit from
+:class:`airflow.sdk.BaseSensorOperator` directly or indirectly.This base class defines the common behavior and parameters that control
 how a sensor waits, retries, and manages worker resources.
 
 As of the Task SDK refactor, ``BaseSensorOperator`` is implemented in the
 Task SDK. Because provider documentation is generated separately, these
-parameters may not always be directly visible on individual provider
-sensor API pages. However, they apply to *all* sensors.
+inherited parameters may not always be directly visible on individual
+provider sensor API pages. However, they apply to *all* sensors.
 
 Common parameters
 ^^^^^^^^^^^^^^^^^
@@ -77,6 +77,16 @@ available on all sensors:
 ``max_wait``
     Upper bound (in seconds) for the delay between checks when
     ``exponential_backoff`` is enabled.
+    
+``silent_fail``
+    If set to ``True``, exceptions raised by ``poke`` are logged and the
+    sensor continues polling instead of failing immediately. Sensor timeout
+    and explicit Airflow skip or fail exceptions are still handled normally.
+
+``never_fail``
+    If set to ``True``, exceptions raised by ``poke`` cause the sensor to be
+    marked as ``SKIPPED`` instead of ``FAILED``. This option is mutually
+    exclusive with ``soft_fail``.
 
 For the authoritative API reference, see the Task SDK documentation for
 ``BaseSensorOperator``:
